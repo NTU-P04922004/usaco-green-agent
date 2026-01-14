@@ -1,14 +1,19 @@
-FROM ghcr.io/astral-sh/uv:python3.13-bookworm
+FROM ghcr.io/astral-sh/uv:python3.12-bookworm-slim
 
-RUN adduser agent
-USER agent
-WORKDIR /home/agent
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl ca-certificates && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN adduser agentbeats
+USER agentbeats
+WORKDIR /home/agentbeats
 
 COPY pyproject.toml uv.lock README.md ./
 COPY src src
+COPY problems problems
 
 RUN \
-    --mount=type=cache,target=/home/agent/.cache/uv,uid=1000 \
+    --mount=type=cache,target=/home/agentbeats/.cache/uv,uid=1000 \
     uv sync --locked
 
 ENTRYPOINT ["uv", "run", "src/server.py"]

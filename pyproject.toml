@@ -1,17 +1,20 @@
 [project]
-name = "agent-template"
+name = "usaco-green-agent"
 version = "0.1.0"
-description = "A template for A2A agents"
+description = "USACO Benchmark Green Agent"
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = "==3.12.*"
 dependencies = [
-    "a2a-sdk[http-server]>=0.3.20",
-    "uvicorn>=0.38.0",
+    "a2a-sdk[http-server]==0.3.20",
+    "pydantic==2.12.5",
+    "uvicorn==0.38.0",
+    "loguru==0.7.3",
+    "tqdm==4.67.1"
 ]
 
 [project.optional-dependencies]
 test = [
     "pytest>=8.0.0",
     "pytest-asyncio>=0.24.0",
-    "httpx>=0.28.1",
+    "httpx>=0.28.1"
 ]
