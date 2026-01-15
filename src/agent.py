@@ -67,7 +67,7 @@ class Agent:
             await updater.reject(new_agent_text_message(f"Invalid request: {e}"))
             return
 
-        dataset = load_dataset("dapumptu/usaco_benchmark_test", split="train")
+        dataset = load_dataset("dapumptu/usaco_benchmark", split="train")
         dataset_size = len(dataset)
 
         logger.info(f"Starting evaluation: {request}")
