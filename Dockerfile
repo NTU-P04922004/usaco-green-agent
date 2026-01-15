@@ -10,7 +10,6 @@ WORKDIR /home/agentbeats
 
 COPY pyproject.toml uv.lock README.md ./
 COPY src src
-COPY problems problems
 
 RUN \
     --mount=type=cache,target=/home/agentbeats/.cache/uv,uid=1000 \

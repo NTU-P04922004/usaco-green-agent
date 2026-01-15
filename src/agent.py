@@ -5,10 +5,11 @@ from typing import Any
 from a2a.server.tasks import TaskUpdater
 from a2a.types import DataPart, Message, Part, TaskState, TextPart
 from a2a.utils import get_message_text, new_agent_text_message
-from judge import Judge, get_problem_path
+from datasets import load_dataset
+from loguru import logger
 from pydantic import BaseModel, HttpUrl, ValidationError
 
-from loguru import logger
+from judge import Judge
 from messenger import Messenger
 
 
@@ -66,8 +67,8 @@ class Agent:
             await updater.reject(new_agent_text_message(f"Invalid request: {e}"))
             return
 
-        # Use request.participants to get participant agent URLs by role
-        # Use request.config for assessment parameters
+        dataset = load_dataset("dapumptu/usaco_benchmark_test", split="train")
+        dataset_size = len(dataset)
 
         logger.info(f"Starting evaluation: {request}")
         start_time = time.time()
@@ -76,16 +77,20 @@ class Agent:
         participant_id = "agent"
         purple_agent_url = str(request.participants[participant_id])
 
-        logger.info(f"Running {len(problem_ids)} tasks")
+        logger.info(f"Running {dataset_size} tasks")
         await updater.update_status(
             TaskState.working,
-            new_agent_text_message(f"Starting evaluation of {len(problem_ids)} tasks"),
+            new_agent_text_message(f"Starting evaluation of {dataset_size} tasks"),
         )
 
         metrics: dict[str, Any] = {"pass_1": 0, "time": 0, "tasks": {}}
 
         try:
-            for problem_id in problem_ids:
+            for data in dataset:
+                problem_id = data["problem_id"]
+                if problem_ids and problem_id not in problem_ids:
+                    continue
+
                 logger.info(f"Running task {problem_id}...")
                 await updater.update_status(
                     TaskState.working,
@@ -93,9 +98,8 @@ class Agent:
                 )
 
                 try:
-                    problem_id = problem_id
-                    judge = Judge(get_problem_path(problem_id))
-                    problem_description = judge.get_problem_description()
+                    judge = Judge(data)
+                    problem_description = data["description"]
 
                     response = await self.messenger.talk_to_agent(
                         problem_description, purple_agent_url, new_conversation=False

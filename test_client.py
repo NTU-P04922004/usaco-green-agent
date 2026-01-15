@@ -21,7 +21,7 @@ logger.add(log_file_path)
 
 
 async def main():
-    base_url = "http://green-agent:9009"
+    base_url = "http://usaco-green-agent:9009"
     async with httpx.AsyncClient(timeout=120) as httpx_client:
         # Initialize A2ACardResolver
         # agent_card_path uses default, extended_agent_card_path also uses default
@@ -48,8 +48,8 @@ async def main():
         # prompt = "Hello"
         # msg = create_text_message_object(content=prompt)
         payload = {
-            "participants": {"agent": "http://my-agent:9009"},
-            "config": {"problem_ids": ["259_bronze_cow_race", "396_bronze_secret_code"]},
+            "participants": {"agent": "http://usaco-purple-agent:9009"},
+            "config": {"problem_ids": ["259_bronze_cow_race", "396_bronze_secret_code"]}
         }
         msg = Message(
             role=Role.user,

@@ -25,39 +25,8 @@ class JudgeResult(NamedTuple):
 
 
 class Judge:
-    def __init__(self, problem_path: str):
-        self.problem_path = problem_path
-        self.problem_config = self._load_problem()
-
-    def _load_problem(self) -> Optional[Dict[str, Any]]:
-        """
-        Loads problem configuration and validates test case files.
-        Returns:
-            A dictionary containing the problem configuration or None if loading fails.
-        """
-        config_path = os.path.join(self.problem_path, "config.json")
-        if not os.path.exists(config_path):
-            print(f"Error: config.json not found in '{self.problem_path}'")
-            return None
-
-        with open(config_path, "r") as f:
-            config = json.load(f)
-
-        print(f"Loaded problem: {config['name']}")
-
-        # Validate that all test case files exist
-        for i in range(1, config["num_tests"] + 1):
-            in_file = os.path.join(self.problem_path, f"{i}.in")
-            out_file = os.path.join(self.problem_path, f"{i}.out")
-            if not os.path.exists(in_file):
-                print(f"Error: Missing input file for test case {i}: {in_file}")
-                return None
-            if not os.path.exists(out_file):
-                print(f"Error: Missing output file for test case {i}: {out_file}")
-                return None
-
-        print(f"Found and validated {config['num_tests']} test cases.")
-        return config
+    def __init__(self, problem_data: Dict[str, Any]):
+        self.problem_data = problem_data
 
     @staticmethod
     def _get_resource_limits_fn(time_limit_s: int, memory_limit_mb: int):
@@ -87,8 +56,8 @@ class Judge:
         """
         Executes a Python solution file and captures its output.
         """
-        time_limit_s = self.problem_config["runtime_limit"]
-        memory_limit_mb = self.problem_config["memory_limit"]
+        time_limit_s = self.problem_data["runtime_limit"]
+        memory_limit_mb = self.problem_data["memory_limit"]
 
         preexec_fn = None
         if os.name == "posix":
@@ -130,14 +99,7 @@ class Judge:
                 verdict="Judge Error", stderr=f"An unexpected error occurred: {e}"
             )
 
-    def get_problem_description(self) -> str:
-        return self.problem_config.get("description", None)
-
     def run_all_tests(self, solution: str):
-        if not self.problem_config:
-            print("\nProblem loading failed.")
-            sys.exit(1)
-
         # Write code to temporary file
         with tempfile.NamedTemporaryFile(mode="w", suffix=".py", delete=False) as f:
             f.write(solution)
@@ -145,17 +107,11 @@ class Judge:
 
         print("-" * 30)
 
-        for i in range(1, self.problem_config["num_tests"] + 1):
+        for i in range(1, self.problem_data["num_tests"] + 1):
             print(f"Running Test Case #{i}...", end=" ", flush=True)
 
-            in_file_path = os.path.join(self.problem_path, f"{i}.in")
-            out_file_path = os.path.join(self.problem_path, f"{i}.out")
-
-            with open(in_file_path, "r") as f:
-                input_data = f.read()
-
-            with open(out_file_path, "r") as f:
-                expected_output = f.read()
+            input_data = self.problem_data["input"][str(i)]
+            expected_output = self.problem_data["output"][str(i)]
 
             exec_result = self._run_solution(solution_path, input_data)
 
