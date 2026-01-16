@@ -1,33 +1,39 @@
 # USACO Benchmark Green Agent
 
+## Overview
+
+This repository implements an AgentBeats green agent for the USACO benchmark. The benchmark was introduced in the paper “[Can Language Models Solve Olympiad Programming?](https://arxiv.org/abs/2404.10952)”
+
 ## Project Structure
 
 ```
 src/
 ├─ server.py      # Server setup and agent card configuration
 ├─ executor.py    # A2A request handling
-├─ agent.py       # Your agent implementation goes here
-└─ messenger.py   # A2A messaging utilities
-tests/
-└─ test_agent.py  # Agent tests
-Dockerfile        # Docker configuration
-pyproject.toml    # Python dependencies
+├─ agent.py       # Green agent implementation
+├─ messenger.py   # A2A messaging utilities
+├─ judge.py       # USACO judge implementation
+└─ evaluator.py   # USACO evaluator implementation
 .github/
 └─ workflows/
    └─ test-and-publish.yml # CI workflow
+tests/
+└─ test_agent.py  # Agent tests
+parse_dataset.py  # Dataset preprocessing
+test_client.py    # Local test client
+pyproject.toml    # Python dependencies
+Dockerfile        # Docker configuration
 ```
 
 ## Getting Started
+1. Clone the repo:
+   ```bash
+   git clone https://github.com/NTU-P04922004/usaco-green-agent
+   cd usaco-green-agent
+   ```
 
-1. **Create your repository** - Click "Use this template" to create your own repository from this template
-
-2. **Implement your agent** - Add your agent logic to [`src/agent.py`](src/agent.py)
-
-3. **Configure your agent card** - Fill in your agent's metadata (name, skills, description) in [`src/server.py`](src/server.py)
-
-4. **Write your tests** - Add custom tests for your agent in [`tests/test_agent.py`](tests/test_agent.py)
-
-For a concrete example of implementing an agent using this template, see this [draft PR](https://github.com/RDI-Foundation/agent-template/pull/8).
+2. Set environment variables
+- Set `DATASET_ID` environment variable to the Hugging Face dataset ID `dapumptu/usaco_benchmark`
 
 ## Running Locally
 
@@ -43,10 +49,10 @@ uv run src/server.py
 
 ```bash
 # Build the image
-docker build -t my-agent .
+docker build -t usaco-green-agent .
 
 # Run the container
-docker run -p 9009:9009 my-agent
+docker run -p 9009:9009 usaco-green-agent
 ```
 
 ## Testing
@@ -71,13 +77,13 @@ If your agent needs API keys or other secrets, add them in Settings → Secrets 
 
 - **Push to `main`** → publishes `latest` tag:
 ```
-ghcr.io/<your-username>/<your-repo-name>:latest
+ghcr.io/<your-username>/usaco-green-agent:latest
 ```
 
 - **Create a git tag** (e.g. `git tag v1.0.0 && git push origin v1.0.0`) → publishes version tags:
 ```
-ghcr.io/<your-username>/<your-repo-name>:1.0.0
-ghcr.io/<your-username>/<your-repo-name>:1
+ghcr.io/<your-username>/usaco-green-agent:1.0.0
+ghcr.io/<your-username>/usaco-green-agent:1
 ```
 
 Once the workflow completes, find your Docker image in the Packages section (right sidebar of your repository). Configure the package visibility in package settings.
