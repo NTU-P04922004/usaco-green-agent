@@ -1,11 +1,12 @@
 # USACO Benchmark Green Agent
 
+This repository implements a green agent for the USACO Bchmark on  the [AgentBeats platform](https://agentbeats.dev/).
+
 ## Overview
 
-This repository implements an AgentBeats green agent for the USACO benchmark. The benchmark was introduced in the paper “[Can Language Models Solve Olympiad Programming?](https://arxiv.org/abs/2404.10952)”
+The USACO Benchmark, introduced in “[Can Language Models Solve Olympiad Programming?](https://arxiv.org/abs/2404.10952)”, consists of 307 USA Computing Olympiad problems with unit tests, reference solutions, and official editorials. It evaluates an agent’s ability to solve complex algorithmic challenges efficiently under time and memory constraints.
 
 ## Project Structure
-
 ```
 src/
 ├─ server.py      # Server setup and agent card configuration
@@ -88,4 +89,9 @@ ghcr.io/<your-username>/usaco-green-agent:1
 
 Once the workflow completes, find your Docker image in the Packages section (right sidebar of your repository). Configure the package visibility in package settings.
 
-> **Note:** Organization repositories may need package write permissions enabled manually (Settings → Actions → General). Version tags must follow [semantic versioning](https://semver.org/) (e.g., `v1.0.0`).
+## References
+
+- [AgentBeats Platform](https://agentbeats.dev/)
+- [Arxiv Paper] [Can Language Models Solve Olympiad Programming?](https://arxiv.org/abs/2404.10952)
+- [Original USACO Benchmark Dataset](https://drive.google.com/file/d/1z5ODOJMqyer1QxzYtEUZ2hbAx-7nU8Vi/view)
+  - More information from the official [repo](https://github.com/princeton-nlp/USACO)
