@@ -105,6 +105,7 @@ class Judge:
             f.write(solution)
             solution_path = f.name
 
+        print(f"{self.problem_data['problem_id']}")
         print("-" * 30)
 
         for i in range(1, self.problem_data["num_tests"] + 1):

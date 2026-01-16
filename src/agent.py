@@ -1,4 +1,4 @@
-import json
+import os
 import time
 from typing import Any
 
@@ -67,7 +67,8 @@ class Agent:
             await updater.reject(new_agent_text_message(f"Invalid request: {e}"))
             return
 
-        dataset = load_dataset("dapumptu/usaco_benchmark", split="train")
+        dataset_id = os.environ.get("DATASET_ID", "dapumptu/usaco_benchmark")
+        dataset = load_dataset(dataset_id, split="train")
         dataset_size = len(dataset)
 
         logger.info(f"Starting evaluation: {request}")
