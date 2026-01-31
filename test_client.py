@@ -45,13 +45,11 @@ async def main():
         factory = ClientFactory(config)
         client = factory.create(public_card)
 
-        # prompt = "Hello"
-        # msg = create_text_message_object(content=prompt)
         payload = {
             "participants": {"agent": "http://usaco-purple-agent:9009"},
-            "config": {"problem_ids": ["639_bronze_diamond_collector", "963_bronze_cow_gymnastics", "1011_bronze_triangles", "1251_bronze_cow_college"]} 
-            
-            # ["259_bronze_cow_race", "396_bronze_secret_code"]
+            "config": {
+                "problem_ids": ["259_bronze_cow_race", "396_bronze_secret_code"]
+            },
         }
         msg = Message(
             role=Role.user,
